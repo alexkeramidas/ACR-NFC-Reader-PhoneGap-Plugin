@@ -180,7 +180,7 @@ public class USBReader implements ACRReader {
             listener.onData(this.mReader.power(slotNum, action), this.mReader.power(slotNum, action).length);
             return null;
         } catch (ReaderException e) {
-            Log.w(TAG, "Error: ----------- "+device.getDeviceName()+": Something went wrong");
+            Log.w(TAG, "Error: -----------: Something went wrong");
             Log.w(TAG, e);
             return null;
         }
