@@ -36,7 +36,12 @@ public class Reset extends Base<BaseParams> implements OnDataListener {
     public boolean run(TaskListener listener) {
         super.run(listener);
         reader = getParams().getReader();
-        reader.getReader().power(getParams().getSlotNumber(), Reader.CARD_WARM_RESET, this);
+        try {
+            reader.getReader().power(getParams().getSlotNumber(), Reader.CARD_WARM_RESET, this);
+        } catch (Exception e) {
+            Log.w(TAG, "Error: ----------- "+device.getDeviceName()+": Something went wrong");
+            return false;
+        }
         return true;
     }
 

@@ -1,6 +1,5 @@
 package com.frankgreen.reader;
 
-
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
@@ -48,15 +47,6 @@ public class USBReader implements ACRReader {
         return mReader.getNumSlots();
     }
 
-//    @Override
-//    public int transmit(int slotNum, byte[] sendBuffer, int sendBufferLength, byte[] recvBuffer, int recvBufferLength) throws ACRReaderException {
-//        try {
-//            return mReader.transmit(slotNum, sendBuffer, sendBufferLength, recvBuffer, recvBufferLength);
-//        } catch (ReaderException e) {
-//            throw new ACRReaderException(e);
-//        }
-//    }
-
     @Override
     public void setOnStateChangeListener(Reader.OnStateChangeListener onStateChangeListener) {
         mReader.setOnStateChangeListener(onStateChangeListener);
@@ -69,15 +59,12 @@ public class USBReader implements ACRReader {
 
     @Override
     public void attach(Intent intent) {
-        UsbDevice device = (UsbDevice) intent
-                .getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
-        if (intent.getBooleanExtra(
-                UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+        if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
 
             if (device != null) {
-                Log.d(TAG, "Opening reader: " + device.getDeviceName()
-                        + "...");
+                Log.d(TAG, "Opening reader: " + device.getDeviceName() + "...");
                 if (onStatusChangeListener != null) {
                     onStatusChangeListener.onAttach(new ACRDevice<UsbDevice>(device));
                 }
@@ -85,8 +72,7 @@ public class USBReader implements ACRReader {
             }
 
         } else {
-            Log.w(TAG, "Permission denied for device "
-                    + device.getDeviceName());
+            Log.w(TAG, "Permission denied for device " + device.getDeviceName());
 
         }
     }
@@ -103,8 +89,7 @@ public class USBReader implements ACRReader {
             }
         }
 
-        UsbDevice device = (UsbDevice) intent
-                .getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
         if (device != null && device.equals(mReader.getDevice())) {
             if (mSlotList != null) {
@@ -195,7 +180,9 @@ public class USBReader implements ACRReader {
             listener.onData(this.mReader.power(slotNum, action), this.mReader.power(slotNum, action).length);
             return null;
         } catch (ReaderException e) {
-            throw new ACRReaderException(e);
+            Log.w(TAG, "Error: ----------- "+device.getDeviceName()+": Something went wrong");
+            Log.w(TAG, e);
+            return null;
         }
     }
 
@@ -215,7 +202,7 @@ public class USBReader implements ACRReader {
             Exception result = null;
             try {
                 mReader.open(params[0]);
-//                acrReader.open(params[0]);
+                // acrReader.open(params[0]);
             } catch (Exception e) {
                 result = e;
             }
@@ -269,7 +256,8 @@ public class USBReader implements ACRReader {
         Log.d(TAG, "****slot***" + slot);
         byte[] receiveBuffer = new byte[30];
         try {
-            int len = mReader.control(slot, Reader.IOCTL_CCID_ESCAPE, sendBuffer, sendBuffer.length, receiveBuffer, receiveBuffer.length);
+            int len = mReader.control(slot, Reader.IOCTL_CCID_ESCAPE, sendBuffer, sendBuffer.length, receiveBuffer,
+                    receiveBuffer.length);
             listener.onData(receiveBuffer, len);
         } catch (ReaderException e) {
             listener.onError(new ACRReaderException(e));
