@@ -82,8 +82,7 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
 
     private int batteryLevel = -1;
 
-    //    private Reader reader;
-    PendingIntent mPermissionIntent;
+        PendingIntent mPermissionIntent;
 
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
@@ -143,31 +142,28 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
         nfcReader = new NFCReader(reader, webView);
 
         nfcReader.setOnStatusChangeListener(new ACRReader.StatusChangeListener() {
+            @Override
+            public void onReady(ACRReader reader) {
+                Log.d(TAG, "onReady");
+                initReader(null, null);
+                webView.sendJavascript("ACR.onReady('" + reader.getReaderName() + "');");
+            }
 
-                                                @Override
-                                                public void onReady(ACRReader reader) {
-                                                    Log.d(TAG, "onReady");
-                                                    initReader(null, null);
-                                                    webView.sendJavascript("ACR.onReady('" + reader.getReaderName() + "');");
-                                                }
+            @Override
+            public void onAttach(ACRDevice device) {
+                Log.d(TAG, "onAttach");
+                webView.sendJavascript("ACR.onAttach('" + ((BluetoothDevice) device.getDevice()).getName() + "');");
+            }
 
-                                                @Override
-                                                public void onAttach(ACRDevice device) {
-                                                    Log.d(TAG, "onAttach");
-                                                    webView.sendJavascript("ACR.onAttach('" + ((BluetoothDevice) device.getDevice()).getName() + "');");
-                                                }
+            @Override
+            public void onDetach(ACRDevice device) {
+                Log.d(TAG, "onDetach");
+                webView.sendJavascript("ACR.onDetach('" + ((BluetoothDevice) device.getDevice()).getName() + "');");
+            }
+        });
 
-                                                @Override
-                                                public void onDetach(ACRDevice device) {
-                                                    Log.d(TAG, "onDetach");
-                                                    webView.sendJavascript("ACR.onDetach('" + ((BluetoothDevice) device.getDevice()).getName() + "');");
-                                                }
-                                            }
-        );
         nfcReader.start();
     }
-
-
 
     private void useUsbReader(CordovaInterface cordova, final CordovaWebView webView) {
         usbManager = (UsbManager) cordova.getActivity().getSystemService(Context.USB_SERVICE);
@@ -177,7 +173,6 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
 
             @Override
             public void onStateChange(int slotNumber, int previousState, int currentState) {
-//                if (!nfcReader.isProcessing()) {
                 Log.d(TAG, "slotNumber " + slotNumber);
                 Log.d(TAG, "previousState " + previousState);
                 Log.d(TAG, "currentState " + currentState);
@@ -186,11 +181,10 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
                 if (slotNumber == 0 && currentState == Reader.CARD_PRESENT) {
                     Log.d(TAG, "Ready to read!!!!");
                     nfcReader.reset(slotNumber);
-                } else {// if (currentState == Reader.CARD_ABSENT && previousState == Reader.CARD_PRESENT) {
+                } else {
                     Log.d(TAG, "Card Lost");
                     webView.sendJavascript("ACR.runCardAbsent();");
                 }
-//                }
             }
         });
 
@@ -216,8 +210,8 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
                                                 }
                                             }
         );
-        // Register receiver for USB permission
 
+        // Register receiver for USB permission
         mPermissionIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(ACTION_USB_PERMISSION), 0);
         nfcReader.setPermissionIntent(mPermissionIntent);
         IntentFilter filter = new IntentFilter();
@@ -269,7 +263,6 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
         } else if (action.equalsIgnoreCase(GET_BATTERY_LEVEL)) {
             getBatteryLevel(callbackContext);
         } else if (action.equalsIgnoreCase(CONNECT_READER)) {
-//            connectReader(callbackContext);
             connectReader(callbackContext, data);
         } else if (action.equalsIgnoreCase(DISCONNECT_READER)) {
             disconnectReader();
@@ -315,19 +308,13 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
     private void getBatteryLevel(final CallbackContext callbackContext) {
         BaseParams baseParams = new BaseParams(0);
         baseParams.setOnGetResultListener(generateResultListener(callbackContext));
-//        nfcReader.getBatteryLevel(baseParams);
+        nfcReader.getBatteryLevel(baseParams);
         callbackContext.success(nfcReader.getReader().getBatteryLevelValue());
     }
 
-//    private void connectReader(final CallbackContext callbackContext) {
-//        if (nfcReader != null) {
-//            Log.d(TAG, "$$$$Try to connect");
-//            nfcReader.connect();
-//        }
-//    }
 
     public void connectReader(final CallbackContext callbackContext, JSONArray data) {
-        if(nfcReader != null) {
+        if (nfcReader != null) {
             try {
                 String mDeviceAddress = data.getString(0);
                 Log.d("ACR", "mdevice data:" + data);
@@ -452,7 +439,6 @@ public class ACRNFCReaderPhoneGapPlugin extends CordovaPlugin {
 
     private void display(final CallbackContext callbackContext, JSONArray data) {
         try {
-//            [msg, options.x, options.y, options.bold, options.font]
             DisplayParams displayParams = new DisplayParams(data.getString(0));
             displayParams.setX(data.getInt(1));
             displayParams.setY(data.getInt(2));
