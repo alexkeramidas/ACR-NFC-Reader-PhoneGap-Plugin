@@ -1,0 +1,28 @@
+{
+  "name": "com.frankgreen",
+  "version": "1.0.1",
+  "description": "ACR NFC Reader PhoneGap Plugin",
+  "cordova": {
+    "id": "com.frankgreen",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexkeramidas/ACR-NFC-Reader-PhoneGap-Plugin.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "ACR",
+    "NFC",
+    "PhoneGap"
+  ],
+  "author": "Alex Keramidas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexkeramidas/ACR-NFC-Reader-PhoneGap-Plugin/issues"
+  },
+  "homepage": "https://github.com/alexkeramidas/ACR-NFC-Reader-PhoneGap-Plugin#readme"
+}
