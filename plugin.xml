@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 
-<plugin id="com.frankgreen" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="com.frankgreen" version="1.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
   <name>ACR-NFC-Reader-PhoneGap-Plugin</name>
   <js-module name="ACR-NFC-Reader-PhoneGap-Plugin" src="www/ACR-NFC-Reader-PhoneGap-Plugin.js">
     <clobbers target="cordova.plugins.ACR-NFC-Reader-PhoneGap-Plugin" />
@@ -105,9 +105,9 @@
     <source-file src="src/android/com/frankgreen/operate/OperateDataListener.java" target-dir="src/com/frankgreen/operate" />
     <source-file src="src/android/com/frankgreen/operate/OperateResult.java" target-dir="src/com/frankgreen/operate" />
 
-    <source-file src="src/android/libs/acssmc-1.1.5.jar" target-dir="libs" />
+    <source-file src="src/android/libs/acssmc-1.1.5.jar" target-dir="src/main/libs" />
     <source-file src="src/android/com/frankgreen/Utils.java" target-dir="src/android/com/frankgreen"/>
     <framework src="src/android/acsbt.gradle" custom="true" type="gradleReference" />
-    <resource-file src="src/android/acsbt-1.0.1.aar" target="libs/acsbt-1.0.1.aar"/>
+    <resource-file src="src/android/libs/acsbt-1.0.1.aar" target="libs/acsbt-1.0.1.aar"/>
   </platform>
 </plugin>

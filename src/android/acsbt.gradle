@@ -1,13 +1,13 @@
-repositories{
+repositories {
     jcenter()
-    flatDir{
-        dirs 'libs'
+    flatDir {
+        dirs 'src/main/libs'
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:+'
-    compile(name:'acsbt-1.0.1', ext:'aar')
+    implementation("com.android.support:support-v4:+")
+    implementation fileTree(dir: 'src/main/libs', include: ['*.jar', '*.aar'])
 }
 
 android {
